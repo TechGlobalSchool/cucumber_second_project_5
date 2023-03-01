@@ -32,3 +32,29 @@ Feature: Validate SmartBear features
     Then all rows should be checked
     When user clicks on "Uncheck All" button
     Then all rows should be unchecked
+
+  @Regression
+  Scenario: Validate adding new order
+    And user clicks on Login button
+    Then user should be routed to "http://secure.smartbearsoftware.com/samples/testcomplete12/weborders/"
+    When user clicks on "Order" menu item
+    And user selects "FamilyAlbum" as product
+    And user enters 2 as quantity
+    And user enters all address information
+      | Jon Doe | 123 TechGlobal Ave | Chicago | IL | 12345 |
+    And user enters all payment information
+      | Visa | 1234567891234567 | 04/23 |
+    And user clicks on "Process" button
+    And user clicks on "View all orders" menu item
+    Then user should see their order displayed in the "List of All Orders" table
+    And validate all information entered displayed correct with the order
+      |  | Jon Doe | FamilyAlbum | 2 | 03/01/2023 | 123 TechGlobal Ave | Chicago | IL | 12345 | Visa | 1234567891234567 | 04/23 |
+
+  @Regression
+  Scenario: Validate "Delete Selected" button
+    And user clicks on Login button
+    Then user should be routed to "http://secure.smartbearsoftware.com/samples/testcomplete12/weborders/"
+    When user clicks on "Check All" button
+    And user clicks on "Delete Selected" button
+    Then validate all orders are deleted from the "List of All Orders"
+    And validate user sees "List of orders is empty. In order to add new order use this link." message

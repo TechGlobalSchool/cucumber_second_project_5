@@ -1,6 +1,7 @@
 utilities/Driver.class
 pages/SmartBearWebOrdersPage.class
 steps/SmartBearSteps.class
+runners/Runner.class
 utilities/ConfigReader.class
 pages/SmartBearLoginPage.class
 utilities/Waiter.class

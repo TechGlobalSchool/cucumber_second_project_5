@@ -14,6 +14,7 @@ import pages.SmartBearLoginPage;
 import pages.SmartBearWebOrdersPage;
 import utilities.Driver;
 import utilities.TableHandler;
+import utilities.Waiter;
 
 public class SmartBearSteps {
     // TODO: create hooks class before running
@@ -96,13 +97,50 @@ public class SmartBearSteps {
 
     @And("user selects {string} as product")
     public void userSelectsAsProduct(String option) {
-        select = new Select(smartBearWebOrdersPage.productOptions);
+        select = new Select(smartBearWebOrdersPage.orderProductOptions);
         select.selectByVisibleText(option);
     }
 
 
     @And("user enters {int} as quantity")
     public void userEntersAsQuantity(int quantity) {
-        smartBearWebOrdersPage.productQuantity.sendKeys(String.valueOf(quantity));
+        smartBearWebOrdersPage.orderProductQuantity.sendKeys(String.valueOf(quantity));
+    }
+
+    @And("user enters all address information")
+    public void userEntersAllAddressInformation(DataTable data) {
+        for (int i = 0; i < data.asList().size(); i++) {
+            smartBearWebOrdersPage.orderAddressInfoInputList.get(i).sendKeys(data.asList().get(i));
+        }
+    }
+
+    @And("user enters all payment information")
+    public void userEntersAllPaymentInformation(DataTable data) {
+        smartBearWebOrdersPage.selectCardType(data.asList().get(0));
+        smartBearWebOrdersPage.orderPmntCardNO.sendKeys(data.asList().get(1));
+        smartBearWebOrdersPage.orderPmntCardExp.sendKeys(data.asList().get(2));
+    }
+
+    @Then("user should see their order displayed in the {string} table")
+    public void userShouldSeeTheirOrderDisplayedInTheTable(String tableName) {
+        Assert.assertEquals(tableName, smartBearWebOrdersPage.subHeading.getText());
+    }
+
+    @And("validate all information entered displayed correct with the order")
+    public void validateAllInformationEnteredDisplayedCorrectWithTheOrder(DataTable data) {
+        for(int i = 1; i < TableHandler.getCells(smartBearWebOrdersPage.ordersTable, 1).size() - 1; i++) {
+            Assert.assertEquals(data.asList().get(i),
+                    TableHandler.getCell(smartBearWebOrdersPage.ordersTable, 1, i).getText());
+        }
+    }
+
+    @Then("validate all orders are deleted from the {string}")
+    public void validateAllOrdersAreDeletedFromThe(String tableName) {
+        Assert.assertEquals(tableName, smartBearWebOrdersPage.subHeading.getText());
+    }
+
+    @And("validate user sees {string} message")
+    public void validateUserSeesMessage(String msg) {
+        Assert.assertEquals(msg, smartBearWebOrdersPage.msgEmptyOrder.getText());
     }
 }
